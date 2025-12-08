@@ -281,5 +281,5 @@ your_project/
 
 ---
 
-**Ready to start?** Follow the steps above and you'll have a working STT model! 🚀
+**Ready to start?** Follow the steps above and you'll have a working STT model! 
 
