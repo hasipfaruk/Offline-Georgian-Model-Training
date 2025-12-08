@@ -1,0 +1,67 @@
+# Requirements for STT Project Template
+# Updated: 2025-01-XX
+# Supports both CPU and GPU training
+
+# ============================================================================
+# CORE DEPENDENCIES (Required)
+# ============================================================================
+nemo-toolkit[all]==2.5.3
+lightning==2.4.0
+omegaconf==2.3.0
+
+# ============================================================================
+# PYTORCH - Install separately based on your CUDA version
+# ============================================================================
+# Check your CUDA version: nvidia-smi
+# 
+# For CUDA 11.8:
+#   pip install torch==2.9.1 torchaudio==2.9.1 --index-url https://download.pytorch.org/whl/cu118
+# 
+# For CUDA 12.1:
+#   pip install torch==2.9.1 torchaudio==2.9.1 --index-url https://download.pytorch.org/whl/cu121
+# 
+# For CPU-only:
+#   pip install torch==2.9.1+cpu torchaudio==2.9.1+cpu --index-url https://download.pytorch.org/whl/cpu
+#
+torch>=2.9.1
+torchaudio>=2.9.1
+
+# ============================================================================
+# AUDIO PROCESSING
+# ============================================================================
+librosa==0.11.0
+soundfile==0.13.1
+sox==1.5.0
+soxr==1.0.0
+resampy==0.4.3
+pyloudnorm==0.1.1
+pydub==0.25.1
+
+# ============================================================================
+# TEXT PROCESSING & TOKENIZATION
+# ============================================================================
+sentencepiece==0.2.1
+tokenizers==0.21.4
+jiwer==3.1.0
+editdistance==0.8.1
+Levenshtein==0.27.3
+
+# ============================================================================
+# DATA PROCESSING
+# ============================================================================
+numpy==1.26.4
+pandas==2.3.3
+scipy==1.15.3
+scikit-learn==1.7.2
+
+# ============================================================================
+# MODEL DOWNLOAD
+# ============================================================================
+huggingface_hub>=0.20.0
+
+# ============================================================================
+# UTILITIES
+# ============================================================================
+tqdm==4.67.1
+PyYAML==6.0.3
+

@@ -1,0 +1,65 @@
+name: STT_Model_Template
+
+# DATA CONFIGURATION
+# Edit these paths to match your project
+train_ds:
+  manifest_filepath: manifests/train.json  # Path to training manifest
+  batch_size: 16  # Adjust based on GPU memory (8-32 typical)
+  num_workers: 0  # Set to 0 on Windows, 4-8 on Linux
+  sample_rate: 16000  # Audio sample rate
+  max_duration: 20  # Maximum audio duration in seconds
+  shuffle: true
+  augmentation:
+    spec_augment:
+      freq_masks: 2
+      time_masks: 10
+      freq_width: 27
+      time_width: 0.05
+
+validation_ds:
+  manifest_filepath: manifests/dev.json  # Path to validation manifest
+  batch_size: 24  # Can be larger than training batch
+  num_workers: 0  # Set to 0 on Windows, 4-8 on Linux
+  sample_rate: 16000
+  max_duration: 20
+  shuffle: false
+
+# OPTIMIZER CONFIGURATION
+optim:
+  name: adamw
+  lr: 0.001  # Learning rate (adjust if loss plateaus: try 0.0005)
+  weight_decay: 0.0001
+  sched:
+    name: CosineAnnealing
+    warmup_steps: 2000
+    max_steps: 100000
+    min_lr: 1e-5
+
+# TRAINER CONFIGURATION
+trainer:
+  max_epochs: 50  # Number of training epochs (increase for better results: 75-100)
+  accelerator: gpu  # "gpu" or "cpu"
+  devices: 1  # Number of GPUs
+  precision: 16-mixed  # "16-mixed" for faster training, "32" for more stable
+  accumulate_grad_batches: 1  # Gradient accumulation (increase if batch size is too small)
+  log_every_n_steps: 50
+  val_check_interval: 0.5  # Validate 2x per epoch (0.5) or 1x per epoch (1.0)
+  gradient_clip_val: 1.0
+  enable_checkpointing: true
+  enable_progress_bar: true
+  callbacks:
+    - class_path: lightning.pytorch.callbacks.ModelCheckpoint
+      init_args:
+        dirpath: lightning_logs
+        filename: "epoch-{epoch:02d}-val_loss-{val_loss:.3f}"
+        monitor: val_loss
+        mode: min
+        save_top_k: 2  # Keep best 2 models
+        save_last: true  # Always save last checkpoint
+        every_n_epochs: 2  # Save every 2 epochs
+    - class_path: lightning.pytorch.callbacks.EarlyStopping
+      init_args:
+        monitor: val_loss
+        patience: 5  # Stop if no improvement for 5 epochs
+        mode: min
+
